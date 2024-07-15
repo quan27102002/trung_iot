@@ -35,9 +35,20 @@ class ChargingScreen extends StatelessWidget {
               ),
               SizedBox(height: MediaQuery.of(context).size.height * 0.1),
               Center(
-                child: SizedBox(
+                child: Container(
                   height: 175,
                   width: 175,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 5,
+                        blurRadius: 10,
+                      ),
+                    ],
+                    shape: BoxShape.circle,
+                  ),
                   child: SfRadialGauge(
                     axes: <RadialAxis>[
                       RadialAxis(
