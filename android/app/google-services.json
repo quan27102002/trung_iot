@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "79495650459",
+    "firebase_url": "https://energymonitor-61619-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "energymonitor-61619",
+    "storage_bucket": "energymonitor-61619.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:79495650459:android:297aeebd09815f2d1f3a3e",
+        "android_client_info": {
+          "package_name": "com.example.datn_trung"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAX6jL6oy1RMioXy0sfGQQZIzWN9eApPtc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

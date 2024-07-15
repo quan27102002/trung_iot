@@ -1,0 +1,22 @@
+{
+    "flutter": {
+        "platforms": {
+            "android": {
+                "default": {
+                    "projectId": "energymonitor-61619",
+                    "appId": "1:79495650459:android:297aeebd09815f2d1f3a3e",
+                    "fileOutput": "android/app/google-services.json"
+                }
+            },
+            "dart": {
+                "lib/firebase_options.dart": {
+                    "projectId": "energymonitor-61619",
+                    "configurations": {
+                        "android": "1:79495650459:android:297aeebd09815f2d1f3a3e",
+                        "ios": "1:79495650459:ios:7dd13d5c9272f2bd1f3a3e"
+                    }
+                }
+            }
+        }
+    }
+}
