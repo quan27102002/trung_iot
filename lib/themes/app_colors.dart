@@ -7,4 +7,8 @@ class AppColors {
   static const kPrimary = Color(0xFF2F9FFD);
   static const black = Color(0xFF000000);
   static const primary600 = Color(0xFF2B91E6);
+  static const blue = Color(0xFF0C2964); // theme color
+  static const grey=Color(0xFFC4C4C4);
+  static const greyQR=Color(0xFF7E7E7E);
+  static const greyFrame=Color(0xFFF2F2F2);
 }
