@@ -1,14 +1,26 @@
-class User {
-  final String uid;
-  final String email;
+class UserModel {
+  String? uid;
+  String? email;
+  String? address;
+  String? phone;
+  String? name;
 
-  User({required this.uid, required this.email});
+  UserModel({
+    this.address,
+    this.phone,
+    this.name,
+    this.uid,
+    this.email,
+  });
 
   // Factory constructor để tạo một đối tượng User từ một document snapshot
-  factory User.fromFirestore(Map<String, dynamic> data) {
-    return User(
+  factory UserModel.fromFirestore(Map<String, dynamic> data) {
+    return UserModel(
       uid: data['uid'],
       email: data['email'],
+      address: data['address'],
+      name: data['name'],
+      phone: data['phone'],
     );
   }
 
@@ -17,6 +29,9 @@ class User {
     return {
       'uid': uid,
       'email': email,
+      'name': name,
+      'phone': phone,
+      'address': address,
     };
   }
 }

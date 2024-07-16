@@ -26,9 +26,9 @@ class _ChargingScreenState extends State<ChargingScreen> {
   double powerData = 0;
   double timeData = 0;
   double voltageData = 0;
-  User? data;
-  Future<User> fetchDataFromFirestore() async {
-    List<User> usersList = [];
+  UserModel? data;
+  Future<UserModel> fetchDataFromFirestore() async {
+    List<UserModel> usersList = [];
     String email = context.read<UserProvider>().emailUser;
     try {
       CollectionReference collectionReference =
@@ -39,7 +39,8 @@ class _ChargingScreenState extends State<ChargingScreen> {
 
       // Duyệt qua từng document trong snapshot và thêm vào dataList
       for (var doc in querySnapshot.docs) {
-        usersList.add(User.fromFirestore(doc.data() as Map<String, dynamic>));
+        usersList
+            .add(UserModel.fromFirestore(doc.data() as Map<String, dynamic>));
       }
     } catch (e) {
       if (kDebugMode) {
@@ -48,10 +49,12 @@ class _ChargingScreenState extends State<ChargingScreen> {
     }
     setState(() {});
     data = usersList.firstWhere((e) => e.email == email);
+    // ignore: use_build_context_synchronously
+    context.read<UserProvider>().saveUser(data!);
     return data!;
   }
 
-  Future<void> _initData(User data) async {
+  Future<void> _initData(UserModel data) async {
     DatabaseReference current =
         FirebaseDatabase.instance.ref('/USER/${data.uid}').child('current');
     DatabaseReference energy =
@@ -68,6 +71,7 @@ class _ChargingScreenState extends State<ChargingScreen> {
         currentData = double.parse(data.toString());
       });
     });
+
     energy.onValue.listen((event) {
       var data = event.snapshot.value;
       setState(() {
@@ -103,7 +107,7 @@ class _ChargingScreenState extends State<ChargingScreen> {
 
   Future<void> _initializeData() async {
     // Chờ cho đến khi fetchDataFromFirestore hoàn thành
-    User user = await fetchDataFromFirestore();
+    UserModel user = await fetchDataFromFirestore();
     // Sau đó gọi _initData
     await _initData(user);
   }
@@ -130,8 +134,10 @@ class _ChargingScreenState extends State<ChargingScreen> {
           ),
           backgroundColor: const Color(0xFF0C2964),
         ),
-        drawer: const Drawer(
-          child: DrawWidget(),
+        drawer: Drawer(
+          child: DrawWidget(
+            user: context.read<UserProvider>().userData,
+          ),
         ),
         body: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -139,22 +145,27 @@ class _ChargingScreenState extends State<ChargingScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  'Trạm sạc số 1',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                ),
+                currentData == 0
+                    ? const SizedBox.shrink()
+                    : const Text(
+                        'Trạm sạc số 1',
+                        style: TextStyle(
+                            fontSize: 24, fontWeight: FontWeight.bold),
+                      ),
                 const SizedBox(height: 20),
-                Container(
-                  height: 1,
-                  color: AppColors.grey,
-                ),
+                currentData == 0
+                    ? const SizedBox.shrink()
+                    : Container(
+                        height: 1,
+                        color: AppColors.grey,
+                      ),
                 SizedBox(
                   height: MediaQuery.of(context).size.height * 0.1,
                 ),
                 Center(
                   child: Container(
-                    height: 175,
-                    width: 175,
+                    height: 200,
+                    width: 200,
                     decoration: BoxDecoration(
                       color: Colors.white,
                       boxShadow: [
@@ -176,46 +187,64 @@ class _ChargingScreenState extends State<ChargingScreen> {
                           maximum: 360,
                           showLabels: false,
                           showTicks: false,
-                          axisLineStyle: const AxisLineStyle(
-                              thickness: 10, color: Colors.green),
+                          axisLineStyle: AxisLineStyle(
+                            thickness: 10,
+                            color:
+                                currentData == 0 ? Colors.grey : Colors.green,
+                          ),
                           ranges: <GaugeRange>[
                             GaugeRange(
                               startValue: 0,
                               endValue: 360,
-                              color: Colors.green,
+                              color:
+                                  currentData == 0 ? Colors.grey : Colors.green,
                               startWidth: 5,
                               endWidth: 5,
                             ),
                           ],
                           annotations: <GaugeAnnotation>[
-                            const GaugeAnnotation(
+                            GaugeAnnotation(
                               widget: Center(
                                 child: Column(
                                   children: [
-                                    Icon(Icons.flash_on,
-                                        size: 40, color: Colors.green),
+                                    Icon(
+                                      Icons.flash_on,
+                                      size: 40,
+                                      color: currentData == 0
+                                          ? Colors.grey
+                                          : Colors.green,
+                                    ),
                                   ],
                                 ),
                               ),
                               angle: 90,
                               positionFactor: 0.4,
                             ),
-                            const GaugeAnnotation(
-                                widget: Text(
-                                  ' Đang sạc',
-                                  style: TextStyle(
-                                      fontSize: 24, color: Colors.green),
-                                ),
-                                angle: 90,
-                                positionFactor: 0.1),
                             GaugeAnnotation(
-                                widget: Text(
-                                  '${currentData}kWh',
-                                  style: const TextStyle(
-                                      fontSize: 24,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold),
+                              widget: Text(
+                                currentData == 0
+                                    ? "Không sử dụng"
+                                    : ' Đang sạc',
+                                style: TextStyle(
+                                  fontSize: 24,
+                                  color: currentData == 0
+                                      ? Colors.grey
+                                      : Colors.green,
                                 ),
+                              ),
+                              angle: 90,
+                              positionFactor: 0.1,
+                            ),
+                            GaugeAnnotation(
+                                widget: currentData == 0
+                                    ? const SizedBox.shrink()
+                                    : Text(
+                                        '${energyData}kWh',
+                                        style: const TextStyle(
+                                            fontSize: 24,
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold),
+                                      ),
                                 angle: 90,
                                 positionFactor: 0.5),
                           ],
@@ -224,58 +253,68 @@ class _ChargingScreenState extends State<ChargingScreen> {
                     ),
                   ),
                 ),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.1),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text(
-                      'Thời gian sử dụng:',
-                      style: TextStyle(
-                        fontSize: 24,
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.1,
+                ),
+                currentData == 0
+                    ? const SizedBox.shrink()
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            'Thời gian sử dụng:',
+                            style: TextStyle(
+                              fontSize: 24,
+                            ),
+                          ),
+                          Text(
+                            '${timeData}h',
+                            style: const TextStyle(
+                                fontSize: 24, fontWeight: FontWeight.bold),
+                          ),
+                        ],
                       ),
-                    ),
-                    Text(
-                      '${timeData}h',
-                      style: const TextStyle(
-                          fontSize: 24, fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
                 const SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Năng lượng:',
-                      style: TextStyle(fontSize: 24),
-                    ),
-                    Text(
-                      '${currentData}kWh',
-                      style:
-                          TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
+                currentData == 0
+                    ? const SizedBox.shrink()
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Năng lượng:',
+                            style: TextStyle(fontSize: 24),
+                          ),
+                          Text(
+                            '${energyData}kWh',
+                            style: TextStyle(
+                                fontSize: 24, fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
                 const SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Công suất:',
-                      style: TextStyle(fontSize: 24),
-                    ),
-                    Text(
-                      '${powerData}W',
-                      style: const TextStyle(
-                          fontSize: 24, fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
+                currentData == 0
+                    ? const SizedBox.shrink()
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Công suất:',
+                            style: TextStyle(fontSize: 24),
+                          ),
+                          Text(
+                            '${powerData}W',
+                            style: const TextStyle(
+                                fontSize: 24, fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
                 SizedBox(height: MediaQuery.of(context).size.height * 0.05),
-                Container(
-                  height: 1,
-                  color: AppColors.grey,
-                ),
+                currentData == 0
+                    ? const SizedBox.shrink()
+                    : Container(
+                        height: 1,
+                        color: AppColors.grey,
+                      ),
               ],
             ),
           ),

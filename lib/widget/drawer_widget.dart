@@ -1,10 +1,14 @@
+import 'package:datn_trung/app/app_routers.dart';
+import 'package:datn_trung/model/user_model.dart';
 import 'package:datn_trung/res/fonts/app_fonts.dart';
 import 'package:datn_trung/res/images/app_images.dart';
 import 'package:datn_trung/themes/app_colors.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class DrawWidget extends StatelessWidget {
-  const DrawWidget({super.key});
+  final UserModel user;
+  const DrawWidget({super.key, required this.user});
 
   @override
   Widget build(BuildContext context) {
@@ -24,76 +28,82 @@ class DrawWidget extends StatelessWidget {
           ),
           child: Column(
             children: [
-              Image.asset(
-                AppImages.defaultAvatar,
-                height: 50,
-                width: 50,
+              CircleAvatar(
+                radius: 40,
+                child: ClipOval(
+                  child: Image.asset(
+                    AppImages.defaultAvatar,
+                    fit: BoxFit.cover,
+                  ),
+                ),
               ),
               Text(
-                'Đào Quang Trung',
+                user.name.toString(),
                 style: AppFonts.quicksandSemi600(
                   16,
                   AppColors.grey500,
                 ),
               ),
-              Text(
-                'Tương Mai, Hai Bà Trưng, Hà Nội',
-                style: AppFonts.quicksandMedium500(
-                  14,
-                  AppColors.grey500,
-                ),
+              const SizedBox(
+                height: 5,
               ),
-              Text(
-                '03459658999',
-                style: AppFonts.quicksandMedium500(
-                  14,
-                  AppColors.grey500,
-                ),
-              ),
-              const Text('UID Thẻ: 43A158F6'),
+              Text('UID Thẻ: ${user.uid}'),
             ],
           ),
         ),
         ListTile(
-          leading: Icon(Icons.account_circle),
+          leading: const Icon(Icons.account_circle),
           title: Text('Thông tin cá nhân',
               style: AppFonts.quicksandSemi600(
                 16,
                 AppColors.grey500,
               )),
           onTap: () {
-            // Handle the tap
+            Navigator.pushNamed(
+              context,
+              AppRouters.profileScreen,
+            );
           },
         ),
         ListTile(
-          leading: Icon(Icons.charging_station_rounded),
+          leading: const Icon(Icons.charging_station_rounded),
           title: Text('Dịch vụ sạc',
               style: AppFonts.quicksandSemi600(
                 16,
                 AppColors.grey500,
               )),
-          onTap: () {},
+          onTap: () {
+            Navigator.pop(context);
+          },
         ),
         ListTile(
-          leading: Icon(Icons.payment),
+          leading: const Icon(Icons.payment),
           title: Text('Thanh toán',
               style: AppFonts.quicksandSemi600(
                 16,
                 AppColors.grey500,
               )),
           onTap: () {
-            // Handle the tap
+            Navigator.pushNamed(
+              context,
+              AppRouters.paymentScreen,
+            );
           },
         ),
         ListTile(
-          leading: Icon(Icons.logout_rounded),
+          leading: const Icon(Icons.logout_rounded),
           title: Text('Đăng xuất',
               style: AppFonts.quicksandSemi600(
                 16,
                 AppColors.grey500,
               )),
-          onTap: () {
-            // Handle the tap
+          onTap: () async {
+            await FirebaseAuth.instance.signOut();
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              AppRouters.loginScreen,
+              (Route<dynamic> route) => false,
+            );
           },
         ),
       ],

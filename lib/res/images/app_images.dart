@@ -11,5 +11,5 @@ class AppImages {
   static const iconEye = "${imagePath}icon_eye.png";
   static const iconEyeClose = "${imagePath}icon_eye_close.png";
   static const logoEV = "${imagePath}logo_ev.png";
-  static const defaultAvatar = "${imagePath}avatar.png";
+  static const defaultAvatar = "${imagePath}avatar_cat.jpg";
 }
