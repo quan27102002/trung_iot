@@ -50,24 +50,48 @@ class DrawWidget extends StatelessWidget {
                   AppColors.grey500,
                 ),
               ),
+              const Text('UID Thẻ: 43A158F6'),
             ],
           ),
         ),
         ListTile(
-          leading: Icon(Icons.message),
-          title: Text('Messages'),
-          onTap: () {},
-        ),
-        ListTile(
           leading: Icon(Icons.account_circle),
-          title: Text('Profile'),
+          title: Text('Thông tin cá nhân',
+              style: AppFonts.quicksandSemi600(
+                16,
+                AppColors.grey500,
+              )),
           onTap: () {
             // Handle the tap
           },
         ),
         ListTile(
-          leading: Icon(Icons.settings),
-          title: Text('Settings'),
+          leading: Icon(Icons.charging_station_rounded),
+          title: Text('Dịch vụ sạc',
+              style: AppFonts.quicksandSemi600(
+                16,
+                AppColors.grey500,
+              )),
+          onTap: () {},
+        ),
+        ListTile(
+          leading: Icon(Icons.payment),
+          title: Text('Thanh toán',
+              style: AppFonts.quicksandSemi600(
+                16,
+                AppColors.grey500,
+              )),
+          onTap: () {
+            // Handle the tap
+          },
+        ),
+        ListTile(
+          leading: Icon(Icons.logout_rounded),
+          title: Text('Đăng xuất',
+              style: AppFonts.quicksandSemi600(
+                16,
+                AppColors.grey500,
+              )),
           onTap: () {
             // Handle the tap
           },

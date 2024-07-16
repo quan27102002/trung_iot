@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
                         useMaterial3: false,
                       ),
                       debugShowCheckedModeBanner: false,
-                      initialRoute: AppRouters.loginScreen,
+                      initialRoute: AppRouters.profileScreen,
                       routes: AppRouters.routes,
                     ),
                     loading.isLoading
