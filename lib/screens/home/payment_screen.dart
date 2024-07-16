@@ -14,7 +14,9 @@ class PaymentScreen extends StatelessWidget {
           backgroundColor: AppColors.blue,
           title: const Text(
             'Thanh toán',
-            style: TextStyle(color: Colors.white),
+            style: TextStyle(
+              color: Colors.white,
+            ),
           ),
           centerTitle: true,
         ),
@@ -24,16 +26,29 @@ class PaymentScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const PaymentDetailRow(
-                  icon: Icons.flash_on, label: 'Đã Sạc', value: '11KWh'),
-              const SizedBox(height: 8),
+                icon: Icons.flash_on,
+                label: 'Đã Sạc',
+                value: '11KWh',
+              ),
+              const SizedBox(
+                height: 8,
+              ),
               const PaymentDetailRow(
-                  icon: Icons.timer, label: 'Thời gian', value: '2hr 30min'),
-              const SizedBox(height: 8),
+                icon: Icons.timer,
+                label: 'Thời gian',
+                value: '2hr 30min',
+              ),
+              const SizedBox(
+                height: 8,
+              ),
               const PaymentDetailRow(
-                  icon: Icons.payment,
-                  label: 'Thanh toán',
-                  value: '200.000 vnđ'),
-              const SizedBox(height: 32),
+                icon: Icons.payment,
+                label: 'Thanh toán',
+                value: '200.000 vnđ',
+              ),
+              const SizedBox(
+                height: 32,
+              ),
               Center(
                 child: Column(
                   children: [
@@ -41,7 +56,9 @@ class PaymentScreen extends StatelessWidget {
                       height: 1,
                       color: AppColors.grey,
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(
+                      height: 16,
+                    ),
                     const Text(
                       'Quét QR để thanh toán',
                       style: TextStyle(
@@ -49,7 +66,9 @@ class PaymentScreen extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                           color: AppColors.greyQR),
                     ),
-                    Image.asset('lib/res/images/qr.png'),
+                    Image.asset(
+                      'lib/res/images/qr.png',
+                    ),
                   ],
                 ),
               ),
