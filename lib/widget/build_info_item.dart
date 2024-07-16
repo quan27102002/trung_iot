@@ -27,12 +27,15 @@ class BuildInfoItem extends StatelessWidget {
               children: [
                 Text(
                   label,
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
                 ),
                 const SizedBox(height: 10),
                 Text(
                   content,
-                  style: const TextStyle(fontSize: 16),
+                  style: const TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.bold),
                 ),
                 Container(
                   height: 1,
