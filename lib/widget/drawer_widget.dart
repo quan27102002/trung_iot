@@ -73,7 +73,10 @@ class DrawWidget extends StatelessWidget {
                 AppColors.grey500,
               )),
           onTap: () {
-            Navigator.pop(context);
+            Navigator.pushNamed(
+              context,
+              AppRouters.chargeScreen,
+            );
           },
         ),
         ListTile(

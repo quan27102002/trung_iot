@@ -1,50 +1,105 @@
+import 'package:datn_trung/model/user_model.dart';
+import 'package:datn_trung/provider/user_provider.dart';
 import 'package:datn_trung/themes/app_colors.dart';
+import 'package:datn_trung/widget/drawer_widget.dart';
 import 'package:datn_trung/widget/payment_detail.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-class PaymentScreen extends StatelessWidget {
+class PaymentScreen extends StatefulWidget {
   const PaymentScreen({super.key});
+
+  @override
+  State<PaymentScreen> createState() => _PaymentScreenState();
+}
+
+class _PaymentScreenState extends State<PaymentScreen> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  double totalEnergy = 0;
+  int totalTime = 0;
+  Future<void> _initData(UserModel data) async {
+    DatabaseReference energy = FirebaseDatabase.instance
+        .ref('/USER/${data.uid}')
+        .child('total_energy');
+    DatabaseReference time =
+        FirebaseDatabase.instance.ref('/USER/${data.uid}').child('total_time');
+
+    energy.onValue.listen((event) {
+      var data = event.snapshot.value;
+      setState(() {
+        totalEnergy = double.parse(data.toString());
+      });
+    });
+
+    time.onValue.listen((event) {
+      var data = event.snapshot.value;
+      setState(() {
+        totalTime = int.parse(data.toString());
+      });
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    UserModel data = context.read<UserProvider>().userData;
+    _initData(data);
+  }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        key: _scaffoldKey,
         appBar: AppBar(
           toolbarHeight: MediaQuery.of(context).size.height * 0.1,
-          backgroundColor: AppColors.blue,
           title: const Text(
             'Thanh toán',
-            style: TextStyle(
+            style: TextStyle(color: Colors.white),
+          ),
+          leading: IconButton(
+            icon: const Icon(
+              Icons.calendar_view_day_outlined,
               color: Colors.white,
             ),
+            onPressed: () {
+              _scaffoldKey.currentState?.openDrawer();
+            },
           ),
-          centerTitle: true,
+          backgroundColor: const Color(0xFF0C2964),
+        ),
+        drawer: Drawer(
+          child: DrawWidget(
+            user: context.read<UserProvider>().userData,
+          ),
         ),
         body: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const PaymentDetailRow(
+              PaymentDetailRow(
                 icon: Icons.flash_on,
-                label: 'Đã Sạc',
-                value: '11KWh',
+                label: 'Tổng năng lượng tiêu thụ',
+                value: totalEnergy.toString() + "kWh",
               ),
               const SizedBox(
                 height: 8,
               ),
-              const PaymentDetailRow(
+              PaymentDetailRow(
                 icon: Icons.timer,
-                label: 'Thời gian',
-                value: '2hr 30min',
+                label: 'Tổng thời gian sử dụng',
+                value: totalTime.toString() + "s",
               ),
               const SizedBox(
                 height: 8,
               ),
-              const PaymentDetailRow(
+              PaymentDetailRow(
                 icon: Icons.payment,
                 label: 'Thanh toán',
-                value: '200.000 vnđ',
+                value: '${totalEnergy * 3000} vnđ',
               ),
               const SizedBox(
                 height: 32,

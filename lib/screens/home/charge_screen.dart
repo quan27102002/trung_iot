@@ -268,7 +268,7 @@ class _ChargingScreenState extends State<ChargingScreen> {
                             ),
                           ),
                           Text(
-                            '${timeData}h',
+                            '${timeData}s',
                             style: const TextStyle(
                                 fontSize: 24, fontWeight: FontWeight.bold),
                           ),

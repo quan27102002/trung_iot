@@ -79,7 +79,7 @@ class _LoginPageState extends State<LoginPage> {
                     height: 30,
                   ),
                   Text(
-                    "Login to your account",
+                    "Đăng nhập hệ thống",
                     style: AppFonts.quicksand700(
                       24,
                       AppColors.kPrimary,
@@ -95,24 +95,25 @@ class _LoginPageState extends State<LoginPage> {
                     child: Column(
                       children: [
                         SimpleInput(
-                          titleInput: "Email",
-                          labelText: "Enter your email",
+                          titleInput: "Tài khoản",
+                          labelText: "Nhập tài khoản",
                           controller: _emailController,
                         ),
                         const SizedBox(
                           height: 20,
                         ),
                         SimpleInput(
-                          titleInput: "Password",
-                          labelText: "Enter your password",
+                          titleInput: "Mật khẩu",
+                          labelText: "Nhập mật khẩu",
                           controller: _passwordController,
                           obscureText: true,
+                          isPassword: true,
                         ),
                         const SizedBox(
                           height: 30,
                         ),
                         SimpleButton(
-                          titleButton: "Log in",
+                          titleButton: "Đăng nhập",
                           onPressed: () {
                             if (_emailController.text.isEmpty ||
                                 _passwordController.text.isEmpty) {
@@ -130,26 +131,6 @@ class _LoginPageState extends State<LoginPage> {
                       ],
                     ),
                   ),
-                  RichText(
-                    text: TextSpan(
-                      children: [
-                        TextSpan(
-                          text: "Don't have an account? ",
-                          style: AppFonts.quicksandMedium500(
-                            16,
-                            const Color(0xFF212121).withOpacity(0.6),
-                          ),
-                        ),
-                        TextSpan(
-                          text: "Create account",
-                          style: AppFonts.quicksandMedium500(
-                            16,
-                            AppColors.kPrimary,
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
                 ],
               ),
             )
