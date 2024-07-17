@@ -26,11 +26,11 @@ class _LoginPageState extends State<LoginPage> {
     AppFunction.showLoading(context);
     try {
       UserCredential userCredential = await _auth.signInWithEmailAndPassword(
-        email: _emailController.text,
-        password: _passwordController.text,
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
       );
       // ignore: use_build_context_synchronously
-      context.read<UserProvider>().saveEmailUser(_emailController.text);
+      context.read<UserProvider>().saveEmailUser(_emailController.text.trim());
       // ignore: use_build_context_synchronously
       AppFunction.hideLoading(context);
 

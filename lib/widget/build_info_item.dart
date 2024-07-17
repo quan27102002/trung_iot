@@ -20,14 +20,14 @@ class BuildInfoItem extends StatelessWidget {
       child: Row(
         children: [
           Icon(icon, color: Colors.orange),
-          SizedBox(width: 16),
+          const SizedBox(width: 16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   label,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 16,
                   ),
                 ),

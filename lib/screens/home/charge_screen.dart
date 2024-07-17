@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:datn_trung/model/user_model.dart';
 import 'package:datn_trung/provider/user_provider.dart';
 import 'package:datn_trung/themes/app_colors.dart';
@@ -26,6 +25,8 @@ class _ChargingScreenState extends State<ChargingScreen> {
   double powerData = 0;
   double timeData = 0;
   double voltageData = 0;
+  int plugData = 0;
+  double totalTimeData = 0;
   UserModel? data;
   Future<UserModel> fetchDataFromFirestore() async {
     List<UserModel> usersList = [];
@@ -57,6 +58,10 @@ class _ChargingScreenState extends State<ChargingScreen> {
   Future<void> _initData(UserModel data) async {
     DatabaseReference current =
         FirebaseDatabase.instance.ref('/USER/${data.uid}').child('current');
+    DatabaseReference plug =
+        FirebaseDatabase.instance.ref('/USER/${data.uid}').child('plug');
+    DatabaseReference totalTime =
+        FirebaseDatabase.instance.ref('/USER/${data.uid}').child('total_time');
     DatabaseReference energy =
         FirebaseDatabase.instance.ref('/USER/${data.uid}').child('energy');
     DatabaseReference power =
@@ -94,6 +99,18 @@ class _ChargingScreenState extends State<ChargingScreen> {
       var data = event.snapshot.value;
       setState(() {
         voltageData = double.parse(data.toString());
+      });
+    });
+    plug.onValue.listen((event) {
+      var data = event.snapshot.value;
+      setState(() {
+        plugData = int.parse(data.toString());
+      });
+    });
+    totalTime.onValue.listen((event) {
+      var data = event.snapshot.value;
+      setState(() {
+        totalTimeData = double.parse(data.toString());
       });
     });
   }
@@ -147,9 +164,9 @@ class _ChargingScreenState extends State<ChargingScreen> {
               children: [
                 currentData == 0
                     ? const SizedBox.shrink()
-                    : const Text(
-                        'Trạm sạc số 1',
-                        style: TextStyle(
+                    : Text(
+                        'Trạm sạc số $plugData',
+                        style: const TextStyle(
                             fontSize: 24, fontWeight: FontWeight.bold),
                       ),
                 const SizedBox(height: 20),
@@ -268,7 +285,7 @@ class _ChargingScreenState extends State<ChargingScreen> {
                             ),
                           ),
                           Text(
-                            '${timeData}h',
+                            '${totalTimeData}h',
                             style: const TextStyle(
                                 fontSize: 24, fontWeight: FontWeight.bold),
                           ),
