@@ -37,7 +37,7 @@ class _LoginPageState extends State<LoginPage> {
       Navigator.pushNamed(
         // ignore: use_build_context_synchronously
         context,
-        AppRouters.chargeScreen,
+        AppRouters.dashBoard,
       );
     } on FirebaseAuthException catch (e) {
       // ignore: use_build_context_synchronously

@@ -1,12 +1,13 @@
+import 'package:datn_trung/model/device_model.dart';
 import 'package:datn_trung/res/fonts/app_fonts.dart';
 import 'package:datn_trung/res/images/app_images.dart';
+import 'package:datn_trung/screens/home/device_card.dart';
+import 'package:datn_trung/screens/home/quick_action.dart';
+import 'package:datn_trung/screens/home/room_card.dart';
+import 'package:datn_trung/screens/home/summary_header.dart';
 import 'package:datn_trung/themes/app_colors.dart';
-import 'package:datn_trung/widget/donut_chart_widget.dart';
-import 'package:datn_trung/widget/item_widget.dart';
-import 'package:datn_trung/widget/item_widget2.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_database/firebase_database.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -16,196 +17,164 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  bool connect = true;
+  double tempData = 0;
+  double humiData = 0;
+  
+
+  Future<void> _initData() async {
+    DatabaseReference tempFirebase =
+        FirebaseDatabase.instance.ref('/monitor').child('temp');
+    DatabaseReference humiFirebase =
+        FirebaseDatabase.instance.ref('/monitor').child('humi');
+
+    tempFirebase.onValue.listen((event) {
+      var data = event.snapshot.value;
+      setState(() {
+        tempData = double.parse(data.toString());
+      });
+    });
+
+    humiFirebase.onValue.listen((event) {
+      var data = event.snapshot.value;
+      setState(() {
+        humiData = double.parse(data.toString());
+      });
+    });
+  }
+
+  
+
+  @override
+  void initState() {
+    _initializeData();
+   
+    super.initState();
+  }
+
+  Future<void> _initializeData() async {
+    await _initData();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: _scaffoldKey,
-      appBar: AppBar(
-        backgroundColor: const Color(0xFF0C2964),
-        title: Text(
-          "Quản lý dịch vụ",
-          style: AppFonts.quicksand600(
-            18,
-            Colors.white,
-          ),
-        ),
-        leading: IconButton(
-          icon: const Icon(
-            Icons.calendar_view_day_outlined,
-            color: Colors.white,
-          ),
-          onPressed: () {
-            _scaffoldKey.currentState?.openDrawer();
-          },
-        ),
-      ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            DrawerHeader(
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    Color(0xFF0CE8A6),
-                    Color(0xFFFFFFFF)
-                  ], // Define your colors here
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          SizedBox(height: 32 + MediaQuery.of(context).padding.top),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Text(
+                  'Good Morning, Codefarmer',
+                  style: AppFonts.quicksand700(
+                    18,
+                    AppColors.black,
+                  ),
                 ),
               ),
-              child: Column(
+              Row(
                 children: [
-                  Image.asset(
-                    AppImages.defaultAvatar,
-                    height: 50,
-                    width: 50,
-                  ),
-                  Text(
-                    'Đào Quang Trung',
-                    style: AppFonts.quicksandSemi600(
-                      16,
-                      AppColors.grey500,
+                  IconButton(
+                      onPressed: () {
+                        // provider.changeMode();
+                      },
+                      icon: const Icon(Icons.lightbulb)),
+                  GestureDetector(
+                    onTap: () {
+                      //  AppNavigator.pushNamed(
+                      // profileRoute,
+                      // // arguments: Icon(
+                      // //   Icons.notifications_outlined,
+                      // //   color: color.tertiary,
+                      // // ),
+                    },
+                    child: const CircleAvatar(
+                      radius: 24,
+                      backgroundImage: AssetImage(AppImages.profile),
                     ),
-                  ),
-                  Text(
-                    'Tương Mai, Hai Bà Trưng, Hà Nội',
-                    style: AppFonts.quicksandMedium500(
-                      14,
-                      AppColors.grey500,
-                    ),
-                  ),
-                  Text(
-                    '03459658999',
-                    style: AppFonts.quicksandMedium500(
-                      14,
-                      AppColors.grey500,
-                    ),
-                  ),
-                  
-                ],
-              ),
-            ),
-            ListTile(
-              leading: Icon(Icons.message),
-              title: Text('Messages'),
-              onTap: () {},
-            ),
-            ListTile(
-              leading: Icon(Icons.account_circle),
-              title: Text('Profile'),
-              onTap: () {
-                // Handle the tap
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.settings),
-              title: Text('Settings'),
-              onTap: () {
-                // Handle the tap
-              },
-            ),
-          ],
-        ),
-      ),
-      body: Container(
-        alignment: Alignment.center,
-        padding: const EdgeInsets.symmetric(
-          vertical: 16,
-          horizontal: 16,
-        ),
-        child: Column(
-          children: [
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 30),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    children: [
-                      Text(
-                        "Kết nối",
-                        style: AppFonts.quicksand700(
-                          16,
-                          AppColors.grey500,
-                        ),
-                      ),
-                      Switch.adaptive(
-                        activeColor: AppColors.kPrimary,
-                        applyCupertinoTheme: false,
-                        value: connect,
-                        onChanged: (bool value) {
-                          setState(() {
-                            connect = !connect;
-                          });
-                        },
-                      ),
-                    ],
-                  ),
-                  ItemWidget(
-                    nameItems: "Ngày chốt số",
-                    number: DateFormat('dd/MM/yyyy').format(DateTime.now()),
-                    colorText: AppColors.grey400.withOpacity(0.6),
                   ),
                 ],
               ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            const Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+            ],
+          ),
+          const SizedBox(height: 32),
+          SummaryHeader(
+            temp: tempData.toString(),
+            humi: humiData.toString(),
+          ),
+          const SizedBox(height: 32),
+          const Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Quick Action',
+                // style: theme.typography.bodyCopyMedium,
+              ),
+              Text(
+                'Edit',
+                // style: theme.typography.bodyCopy,
+              )
+            ],
+          ),
+          const SizedBox(height: 16),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              ...['Wake up', 'Sleep', 'Clean']
+                  .map((e) => QuickAction(action: e))
+            ],
+          ),
+          const SizedBox(height: 32),
+          const Text(
+            'Active Devices',
+          ),
+          const SizedBox(height: 16),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                ItemWidget(
-                  nameItems: "Điện áp",
-                  number: "220 V",
-                  colorText: Colors.orangeAccent,
-                ),
-                ItemWidget(
-                  nameItems: "Dòng điện",
-                  number: "0.2 A",
-                  colorText: Colors.blue,
-                ),
-                ItemWidget(
-                  nameItems: "Công suất",
-                  number: "40 W",
-                  colorText: Colors.green,
-                ),
-                ItemWidget(
-                  nameItems: "Tần số",
-                  number: "50 Hz",
-                  colorText: Color.fromARGB(255, 233, 224, 147),
+                ...devices.map(
+                  (e) => DeviceCard(
+                    device: e,
+                  ),
                 ),
               ],
             ),
-            const SizedBox(
-              height: 20,
-            ),
-            const DonutWidgetChart(
-              value: 16,
-              totalValue: 20,
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            const Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                ItemWidget2(
-                  nameItems: "Trạm sạc số: ",
-                  number: "   1     ",
+          ),
+          const SizedBox(height: 32),
+          const Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Rooms',
+              ),
+              Text(
+                'Edit',
+              )
+            ],
+          ),
+          const SizedBox(height: 16),
+          MediaQuery.removePadding(
+            context: context,
+            removeTop: true,
+            child: GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 16,
+                  mainAxisSpacing: 16,
+                  mainAxisExtent: 100,
                 ),
-                ItemWidget2(
-                  nameItems: "Trạng thái: ",
-                  number: "Đang sạc",
-                ),
-              ],
-            ),
-          ],
-        ),
+                itemCount: 8,
+                itemBuilder: (BuildContext context, int index) {
+                  return const RoomCard();
+                }),
+          ),
+        ]),
       ),
     );
   }

@@ -17,10 +17,7 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      throw UnsupportedError(
-        'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
-      );
+      return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -28,15 +25,9 @@ class DefaultFirebaseOptions {
       case TargetPlatform.iOS:
         return ios;
       case TargetPlatform.macOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return macos;
       case TargetPlatform.windows:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for windows - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return windows;
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -50,21 +41,49 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyAX6jL6oy1RMioXy0sfGQQZIzWN9eApPtc',
-    appId: '1:79495650459:android:297aeebd09815f2d1f3a3e',
-    messagingSenderId: '79495650459',
-    projectId: 'energymonitor-61619',
-    databaseURL: 'https://energymonitor-61619-default-rtdb.asia-southeast1.firebasedatabase.app',
-    storageBucket: 'energymonitor-61619.appspot.com',
+    apiKey: 'AIzaSyApE5SkRt8Mk_B6I1vqIVwt53PutmLYK88',
+    appId: '1:920535675660:android:73bcd1c2c0d7a749340f29',
+    messagingSenderId: '920535675660',
+    projectId: 'datn-chinh',
+    storageBucket: 'datn-chinh.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyDQs1QOsPRSSXSecSrEaZrEg40rLuShpbE',
-    appId: '1:79495650459:ios:7dd13d5c9272f2bd1f3a3e',
-    messagingSenderId: '79495650459',
-    projectId: 'energymonitor-61619',
-    databaseURL: 'https://energymonitor-61619-default-rtdb.asia-southeast1.firebasedatabase.app',
-    storageBucket: 'energymonitor-61619.appspot.com',
+    apiKey: 'AIzaSyC_TShaBVdRvK_11CkCyavAA3Kf5O2uG18',
+    appId: '1:920535675660:ios:f568b15e39b2439d340f29',
+    messagingSenderId: '920535675660',
+    projectId: 'datn-chinh',
+    storageBucket: 'datn-chinh.appspot.com',
     iosBundleId: 'com.example.datnTrung',
   );
+
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyDG6DPjgh1pvh3cSpknSY96LR2gl2L5T0g',
+    appId: '1:920535675660:web:39dd284d7c2d75d0340f29',
+    messagingSenderId: '920535675660',
+    projectId: 'datn-chinh',
+    authDomain: 'datn-chinh.firebaseapp.com',
+    storageBucket: 'datn-chinh.appspot.com',
+    measurementId: 'G-1B95V5TZXW',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyC_TShaBVdRvK_11CkCyavAA3Kf5O2uG18',
+    appId: '1:920535675660:ios:f568b15e39b2439d340f29',
+    messagingSenderId: '920535675660',
+    projectId: 'datn-chinh',
+    storageBucket: 'datn-chinh.appspot.com',
+    iosBundleId: 'com.example.datnTrung',
+  );
+
+  static const FirebaseOptions windows = FirebaseOptions(
+    apiKey: 'AIzaSyDG6DPjgh1pvh3cSpknSY96LR2gl2L5T0g',
+    appId: '1:920535675660:web:8455afd71c59526e340f29',
+    messagingSenderId: '920535675660',
+    projectId: 'datn-chinh',
+    authDomain: 'datn-chinh.firebaseapp.com',
+    storageBucket: 'datn-chinh.appspot.com',
+    measurementId: 'G-P1F67S97FD',
+  );
+
 }
